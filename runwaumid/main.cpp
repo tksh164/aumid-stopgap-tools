@@ -62,24 +62,25 @@ void ShowErrorMessageBox(LPCWSTR title, const UINT type, LPCWSTR format, ...)
     va_end(argList);
 }
 
-BOOL ValidateArgStringLength(LPCWSTR argString, size_t maxLength, LPCWSTR argName)
+HRESULT ValidateArgStringLength(LPCWSTR argString, const size_t maxLength, LPCWSTR argName)
 {
     HRESULT hr = StringCchLength(argString, maxLength, NULL);
     if (FAILED(hr))
     {
-        ShowErrorMessageBox(APP_NAME, MB_OK | MB_ICONWARNING, L"Too long the %s parameter. The maximum length is %d characters. (HRESULT: 0x%08X)", argName, maxLength - 1, hr);
+        constexpr LPCWSTR ERROR_MESSAGE_FORMAT = L"Too long the %s parameter. The maximum length is %d characters. (HRESULT: 0x%08X)";
+        ShowErrorMessageBox(APP_NAME, MB_OK | MB_ICONWARNING, ERROR_MESSAGE_FORMAT, argName, maxLength - 1, hr);
     }
-    return SUCCEEDED(hr);
+    return hr;
 }
 
-BOOL CopyStringToBuffer(LPWSTR buffer, size_t bufferLength, LPCWSTR source, unsigned long callerLineNumber)
+HRESULT CopyStringToBuffer(LPWSTR buffer, const size_t bufferLength, LPCWSTR source, const unsigned long callerLineNumber)
 {
     HRESULT hr = StringCchCopy(buffer, bufferLength, source);
     if (FAILED(hr))
     {
         ShowErrorMessageBox(APP_NAME, MB_OK | MB_ICONERROR, L"StringCchCopy() failed with 0x%08X as line %u", hr, callerLineNumber);
     }
-    return SUCCEEDED(hr);
+    return hr;
 }
 
 enum WindowFindMode
@@ -133,31 +134,33 @@ BOOL GetExecutionContext(ExecutionContext& context)
     if (context.WindowFindMode == WindowFindMode::PartialTitleText || context.WindowFindMode == WindowFindMode::ExactTitleText)
     {
         if (!(argc == 5 || argc == 6)) goto EarlyReturn;  // Too less or too many command line arguments.
+
         BOOL hasParameterArg = argc >= 6;
-        BOOL isCmdlineArgsValid = TRUE;
+        BOOL isArgsValid = TRUE;
 
         // Check the length of the command line arguments and show message for error understandability.
-        isCmdlineArgsValid = ValidateArgStringLength(argv[2], APP_USER_MODEL_ID_BUFFER_LENGTH, L"AppUserModelID") && isCmdlineArgsValid;
-        isCmdlineArgsValid = ValidateArgStringLength(argv[3], WINDOW_TITLE_TEXT_BUFFER_LENGTH, L"WindowTitle") && isCmdlineArgsValid;
-        isCmdlineArgsValid = ValidateArgStringLength(argv[4], PATH_BUFFER_LENGTH, L"TargetToOpen") && isCmdlineArgsValid;
+        isArgsValid = SUCCEEDED(ValidateArgStringLength(argv[2], APP_USER_MODEL_ID_BUFFER_LENGTH, L"AppUserModelID")) && isArgsValid;
+        isArgsValid = SUCCEEDED(ValidateArgStringLength(argv[3], WINDOW_TITLE_TEXT_BUFFER_LENGTH, L"WindowTitle")) && isArgsValid;
+        isArgsValid = SUCCEEDED(ValidateArgStringLength(argv[4], PATH_BUFFER_LENGTH, L"TargetToOpen")) && isArgsValid;
         if (hasParameterArg)
         {
-            isCmdlineArgsValid = ValidateArgStringLength(argv[5], PATH_BUFFER_LENGTH, L"ParametersForTargetToOpen") && isCmdlineArgsValid;
+            isArgsValid = SUCCEEDED(ValidateArgStringLength(argv[5], PATH_BUFFER_LENGTH, L"ParametersForTargetToOpen")) && isArgsValid;
         }
-        if (!isCmdlineArgsValid) goto EarlyReturn;  // There are invalid command line arguments.
+        if (!isArgsValid) goto EarlyReturn;  // There are invalid command line arguments.
 
         // Store the command line arguments to the app execution context.
-        if (!CopyStringToBuffer(context.AppUserModelID, sizeof(context.AppUserModelID), argv[2], __LINE__)) goto EarlyReturn;
-        if (!CopyStringToBuffer(context.WindowTitleText, sizeof(context.WindowTitleText), argv[3], __LINE__)) goto EarlyReturn;
-        if (!CopyStringToBuffer(context.TargetToOpen, sizeof(context.TargetToOpen), argv[4], __LINE__)) goto EarlyReturn;
+        if (FAILED(CopyStringToBuffer(context.AppUserModelID, sizeof(context.AppUserModelID), argv[2], __LINE__))) goto EarlyReturn;
+        if (FAILED(CopyStringToBuffer(context.WindowTitleText, sizeof(context.WindowTitleText), argv[3], __LINE__))) goto EarlyReturn;
+        if (FAILED(CopyStringToBuffer(context.TargetToOpen, sizeof(context.TargetToOpen), argv[4], __LINE__))) goto EarlyReturn;
         if (hasParameterArg)
         {
-            if (!CopyStringToBuffer(context.ParametersForTargetToOpen, sizeof(context.ParametersForTargetToOpen), argv[5], __LINE__)) goto EarlyReturn;
+            if (FAILED(CopyStringToBuffer(context.ParametersForTargetToOpen, sizeof(context.ParametersForTargetToOpen), argv[5], __LINE__))) goto EarlyReturn;
         }
         else
         {
-            if (!CopyStringToBuffer(context.ParametersForTargetToOpen, sizeof(context.ParametersForTargetToOpen), L"", __LINE__)) goto EarlyReturn;
+            if (FAILED(CopyStringToBuffer(context.ParametersForTargetToOpen, sizeof(context.ParametersForTargetToOpen), L"", __LINE__))) goto EarlyReturn;
         }
+
         returnValue = TRUE;
     }
 
@@ -165,30 +168,32 @@ BOOL GetExecutionContext(ExecutionContext& context)
     else if (context.WindowFindMode == WindowFindMode::ProcessId)
     {
         if (!(argc == 4 || argc == 5)) goto EarlyReturn;  // Too less or too many command line arguments.
+
         BOOL hasParameterArg = argc >= 5;
-        BOOL isCmdlineArgsValid = TRUE;
+        BOOL isArgsValid = TRUE;
 
         // Check the length of the command line arguments and show message for error understandability.
-        isCmdlineArgsValid = ValidateArgStringLength(argv[2], APP_USER_MODEL_ID_BUFFER_LENGTH, L"AppUserModelID") && isCmdlineArgsValid;
-        isCmdlineArgsValid = ValidateArgStringLength(argv[3], PATH_BUFFER_LENGTH, L"TargetToOpen") && isCmdlineArgsValid;
+        isArgsValid = SUCCEEDED(ValidateArgStringLength(argv[2], APP_USER_MODEL_ID_BUFFER_LENGTH, L"AppUserModelID")) && isArgsValid;
+        isArgsValid = SUCCEEDED(ValidateArgStringLength(argv[3], PATH_BUFFER_LENGTH, L"TargetToOpen")) && isArgsValid;
         if (hasParameterArg)
         {
-            isCmdlineArgsValid = ValidateArgStringLength(argv[4], PATH_BUFFER_LENGTH, L"ParametersForTargetToOpen") && isCmdlineArgsValid;
+            isArgsValid = SUCCEEDED(ValidateArgStringLength(argv[4], PATH_BUFFER_LENGTH, L"ParametersForTargetToOpen")) && isArgsValid;
         }
-        if (!isCmdlineArgsValid) goto EarlyReturn;  // There are invalid command line arguments.
+        if (!isArgsValid) goto EarlyReturn;  // There are invalid command line arguments.
 
         // Store the command line arguments to the app execution context.
         context.WindowFindMode = WindowFindMode::ProcessId;
-        if (!CopyStringToBuffer(context.AppUserModelID, sizeof(context.AppUserModelID), argv[2], __LINE__)) goto EarlyReturn;
-        if (!CopyStringToBuffer(context.TargetToOpen, sizeof(context.TargetToOpen), argv[3], __LINE__)) goto EarlyReturn;
+        if (!FAILED(CopyStringToBuffer(context.AppUserModelID, sizeof(context.AppUserModelID), argv[2], __LINE__))) goto EarlyReturn;
+        if (!FAILED(CopyStringToBuffer(context.TargetToOpen, sizeof(context.TargetToOpen), argv[3], __LINE__))) goto EarlyReturn;
         if (hasParameterArg)
         {
-            if (!CopyStringToBuffer(context.ParametersForTargetToOpen, sizeof(context.ParametersForTargetToOpen), argv[4], __LINE__)) goto EarlyReturn;
+            if (!FAILED(CopyStringToBuffer(context.ParametersForTargetToOpen, sizeof(context.ParametersForTargetToOpen), argv[4], __LINE__))) goto EarlyReturn;
         }
         else
         {
-            if (!CopyStringToBuffer(context.ParametersForTargetToOpen, sizeof(context.ParametersForTargetToOpen), L"", __LINE__)) goto EarlyReturn;
+            if (!FAILED(CopyStringToBuffer(context.ParametersForTargetToOpen, sizeof(context.ParametersForTargetToOpen), L"", __LINE__))) goto EarlyReturn;
         }
+
         returnValue = TRUE;
     }
 
