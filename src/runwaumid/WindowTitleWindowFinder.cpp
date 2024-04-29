@@ -134,7 +134,6 @@ BOOL WindowTitleWindowFinder::HasWindowAppUserModelId(const HWND windowHandle, P
     {
 		// The window has the specified AppUserModelID.
 		returnValue = TRUE;
-		DEBUG_PRINT(L"Found the window with the same AppUserModelID.\n");
     }
     PropVariantClear(&propVariant);  // Release the memory of the propVariant.
 
