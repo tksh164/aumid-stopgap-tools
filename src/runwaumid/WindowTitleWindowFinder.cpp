@@ -11,17 +11,17 @@ WindowTitleWindowFinder::~WindowTitleWindowFinder()
 {
 }
 
-HWND WindowTitleWindowFinder::FindWindow(LPCWSTR windowTitleToFind, const BOOL useExactMatch)
+HWND WindowTitleWindowFinder::FindWindow(LPCWSTR windowTitleToFind, const BOOL useExactMatch, LPCWSTR skipAppUserModelId)
 {
-    return FindWindowWithRetry(windowTitleToFind, useExactMatch);
+    return FindWindowWithRetry(windowTitleToFind, useExactMatch, skipAppUserModelId);
 }
 
-HWND WindowTitleWindowFinder::FindWindowWithRetry(LPCWSTR windowTitleToFind, const BOOL useExactMatch)
+HWND WindowTitleWindowFinder::FindWindowWithRetry(LPCWSTR windowTitleToFind, const BOOL useExactMatch, LPCWSTR skipAppUserModelId)
 {
     HWND foundWindowHandle = NULL;
     for (DWORD retryCount = 0; retryCount < _maxRetryCount; retryCount++)
     {
-        HWND windowHandle = FindWindowByTitle(windowTitleToFind, useExactMatch);
+        HWND windowHandle = FindWindowByTitle(windowTitleToFind, useExactMatch, skipAppUserModelId);
         if (windowHandle != NULL)
         {
             foundWindowHandle = windowHandle;
@@ -33,12 +33,13 @@ HWND WindowTitleWindowFinder::FindWindowWithRetry(LPCWSTR windowTitleToFind, con
     return foundWindowHandle;
 }
 
-HWND WindowTitleWindowFinder::FindWindowByTitle(LPCWSTR windowTitleToFind, const BOOL useExactMatch)
+HWND WindowTitleWindowFinder::FindWindowByTitle(LPCWSTR windowTitleToFind, const BOOL useExactMatch, LPCWSTR skipAppUserModelId)
 {
     FindWindowData data = { 0 };
     SecureZeroMemory(&data, sizeof(data));
     data.WindowTitleToFind = windowTitleToFind;
     data.UseExactMatch = useExactMatch;
+	data.SkipAppUserModelId = skipAppUserModelId;
     data.FoundWindowHandle = NULL;
     EnumWindows(EnumWindowsProc, (LPARAM)&data);
     return data.FoundWindowHandle;
@@ -47,7 +48,7 @@ HWND WindowTitleWindowFinder::FindWindowByTitle(LPCWSTR windowTitleToFind, const
 BOOL CALLBACK WindowTitleWindowFinder::EnumWindowsProc(HWND hwnd, LPARAM lParam)
 {
     FindWindowData& data = *(FindWindowData*)lParam;
-    if (!IsTargetWindow(hwnd, data.WindowTitleToFind, data.UseExactMatch))
+    if (!IsTargetWindow(hwnd, data.WindowTitleToFind, data.UseExactMatch, data.SkipAppUserModelId))
     {
         return TRUE;  // Continue enumeration.
     }
@@ -55,7 +56,7 @@ BOOL CALLBACK WindowTitleWindowFinder::EnumWindowsProc(HWND hwnd, LPARAM lParam)
     return FALSE;  // Found.
 }
 
-BOOL WindowTitleWindowFinder::IsTargetWindow(const HWND windowHandle, LPCWSTR windowTitleToFind, const BOOL useExactMatch)
+BOOL WindowTitleWindowFinder::IsTargetWindow(const HWND windowHandle, LPCWSTR windowTitleToFind, const BOOL useExactMatch, LPCWSTR skipAppUserModelId)
 {
     const BOOL isOwnedWindow = GetWindow(windowHandle, GW_OWNER) != NULL;
     if (isOwnedWindow)
@@ -94,5 +95,46 @@ BOOL WindowTitleWindowFinder::IsTargetWindow(const HWND windowHandle, LPCWSTR wi
         }
     }
 
+    const BOOL hasSameWindowAppUserModelId = HasWindowAppUserModelId(windowHandle, skipAppUserModelId);
+    if (hasSameWindowAppUserModelId)
+    {
+        // The window already has the same AppUserModelID.
+		return FALSE;
+    }
+
     return TRUE;  // Found.
+}
+
+BOOL WindowTitleWindowFinder::HasWindowAppUserModelId(const HWND windowHandle, PCWSTR appUserModelId)
+{
+    IPropertyStore* propertyStore = nullptr;
+    HRESULT hr = SHGetPropertyStoreForWindow(windowHandle, IID_PPV_ARGS(&propertyStore));
+    if (FAILED(hr))
+    {
+        // Considered that the window does not have an AppUserModelID if failed to get the property store.
+		return FALSE;
+    }
+
+    BOOL returnValue = FALSE;
+
+    PROPVARIANT propVariant = { 0 };
+	SecureZeroMemory(&propVariant, sizeof(propVariant));
+    hr = propertyStore->GetValue(PKEY_AppUserModel_ID, &propVariant);
+    if (FAILED(hr))
+    {
+        // Considered that the window does not have an AppUserModelID if failed to get the property value.
+		goto EarlyReturn;
+    }
+    if (propVariant.vt == VT_LPWSTR && (wcscmp(propVariant.pwszVal, appUserModelId) == 0))
+    {
+		// The window has the specified AppUserModelID.
+		returnValue = TRUE;
+		DEBUG_PRINT(L"Found the window with the same AppUserModelID.\n");
+    }
+    PropVariantClear(&propVariant);  // Release the memory of the propVariant.
+
+EarlyReturn:
+
+    propertyStore->Release();
+    return returnValue;
 }

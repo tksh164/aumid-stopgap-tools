@@ -309,12 +309,12 @@ int WINAPI wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
     if (executionContext->WindowFindMode == WindowFindMode::PartialTitleText)
     {
         auto windowFinder = std::make_unique<WindowTitleWindowFinder>();
-        windowHandle = windowFinder->FindWindow(executionContext->WindowTitleText, FALSE);
+        windowHandle = windowFinder->FindWindow(executionContext->WindowTitleText, FALSE, executionContext->AppUserModelID);
     }
     else if (executionContext->WindowFindMode == WindowFindMode::ExactTitleText)
     {
         auto windowFinder = std::make_unique<WindowTitleWindowFinder>();
-        windowHandle = windowFinder->FindWindow(executionContext->WindowTitleText, TRUE);
+        windowHandle = windowFinder->FindWindow(executionContext->WindowTitleText, TRUE, executionContext->AppUserModelID);
     }
     else if (executionContext->WindowFindMode == WindowFindMode::ProcessId)
     {
