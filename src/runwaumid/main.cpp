@@ -238,10 +238,8 @@ BOOL OpenTargetUsingShell(LPCWSTR target, LPCWSTR parameters, HANDLE* processHan
     return result;
 }
 
-BOOL SetAppUserModelIDToWindow(const HWND windowHandle, PCWSTR appUserModelId)
+BOOL SetAppUserModelIdToWindow(const HWND windowHandle, PCWSTR appUserModelId)
 {
-    BOOL returnValue = TRUE;
-
     //
     // NOTE:
     // Obtain the window's property store to set an explicit Application User Model ID.
@@ -255,16 +253,16 @@ BOOL SetAppUserModelIDToWindow(const HWND windowHandle, PCWSTR appUserModelId)
     if (FAILED(hr))
     {
         ShowErrorMessageBox(APP_NAME, MB_OK | MB_ICONERROR, L"SHGetPropertyStoreForWindow() failed with 0x%08X", hr);
-        returnValue = FALSE;
-        goto EarlyReturn;
+        return FALSE;
     }
+
+    BOOL returnValue = FALSE;
 
     PROPVARIANT propVariant;
     hr = InitPropVariantFromString(appUserModelId, &propVariant);
     if (FAILED(hr))
     {
         ShowErrorMessageBox(APP_NAME, MB_OK | MB_ICONERROR, L"InitPropVariantFromString() failed with 0x%08X", hr);
-        returnValue = FALSE;
         goto EarlyReturn;
     }
 
@@ -272,17 +270,16 @@ BOOL SetAppUserModelIDToWindow(const HWND windowHandle, PCWSTR appUserModelId)
     if (FAILED(hr))
     {
         ShowErrorMessageBox(APP_NAME, MB_OK | MB_ICONERROR, L"IPropertyStore::SetValue() failed with 0x%08X.", hr);
-        returnValue = FALSE;
     }
-
+    else
+    {
+        returnValue = TRUE;
+    }
     PropVariantClear(&propVariant);  // Release the memory of the propVariant.
 
 EarlyReturn:
 
-    if (propertyStore)
-    {
-        propertyStore->Release();
-    }
+    propertyStore->Release();
     return returnValue;
 }
 
@@ -309,12 +306,12 @@ int WINAPI wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
     if (executionContext->WindowFindMode == WindowFindMode::PartialTitleText)
     {
         auto windowFinder = std::make_unique<WindowTitleWindowFinder>();
-        windowHandle = windowFinder->FindWindow(executionContext->WindowTitleText, FALSE);
+        windowHandle = windowFinder->FindWindow(executionContext->WindowTitleText, FALSE, executionContext->AppUserModelID);
     }
     else if (executionContext->WindowFindMode == WindowFindMode::ExactTitleText)
     {
         auto windowFinder = std::make_unique<WindowTitleWindowFinder>();
-        windowHandle = windowFinder->FindWindow(executionContext->WindowTitleText, TRUE);
+        windowHandle = windowFinder->FindWindow(executionContext->WindowTitleText, TRUE, executionContext->AppUserModelID);
     }
     else if (executionContext->WindowFindMode == WindowFindMode::ProcessId)
     {
@@ -331,7 +328,7 @@ int WINAPI wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
     if (windowHandle != NULL)
     {
         // Set the AppUserModelID to the window.
-        if (!SetAppUserModelIDToWindow(windowHandle, executionContext->AppUserModelID))
+        if (!SetAppUserModelIdToWindow(windowHandle, executionContext->AppUserModelID))
         {
             return -1;
         }

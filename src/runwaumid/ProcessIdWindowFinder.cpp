@@ -59,26 +59,30 @@ BOOL ProcessIdWindowFinder::IsTargetWindow(const HWND windowHandle, const DWORD 
     const BOOL isOwnedWindow = GetWindow(windowHandle, GW_OWNER) != NULL;
     if (isOwnedWindow)
     {
-        return FALSE;  // The window is owned another window.
+        // The window is owned another window.
+        return FALSE;
     }
 
     const BOOL isWindowVisible = IsWindowVisible(windowHandle);
     if (!isWindowVisible)
     {
-        return FALSE;  // The window is not visible.
+        // The window is not visible.
+        return FALSE;
     }
 
     DWORD processId = 0;
     if (GetWindowThreadProcessId(windowHandle, &processId) == 0)
     {
-        return FALSE;  // The window handle is invalid.
+        // The window handle is invalid.
+        return FALSE;
     }
     DEBUG_PRINT(L"Process ID: %d\n", processId);
 
     const BOOL isProcessIdMatched = processIdToFind == processId;
     if (!isProcessIdMatched)
     {
-        return FALSE;  // The process ID did not match.
+        // The process ID did not match.
+        return FALSE;
     }
 
     return TRUE;  // Found.
