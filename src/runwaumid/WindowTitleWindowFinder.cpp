@@ -61,13 +61,15 @@ BOOL WindowTitleWindowFinder::IsTargetWindow(const HWND windowHandle, LPCWSTR wi
     const BOOL isOwnedWindow = GetWindow(windowHandle, GW_OWNER) != NULL;
     if (isOwnedWindow)
     {
-        return FALSE;  // The window is owned another window.
+        // The window is owned another window.
+        return FALSE;
     }
 
     const BOOL isWindowVisible = IsWindowVisible(windowHandle);
     if (!isWindowVisible)
     {
-        return FALSE;  // The window is not visible.
+        // The window is not visible.
+        return FALSE;
     }
 
     constexpr int WINDOW_TITLE_BUFFER_LENGTH = 256;
@@ -75,7 +77,8 @@ BOOL WindowTitleWindowFinder::IsTargetWindow(const HWND windowHandle, LPCWSTR wi
     SecureZeroMemory(windowTitle, sizeof(windowTitle));
     if (GetWindowText(windowHandle, windowTitle, WINDOW_TITLE_BUFFER_LENGTH) == 0)
     {
-        return FALSE;  // The window has no title text, or has empty title text.
+        // The window has no title text, or has empty title text.
+        return FALSE;
     }
 
     if (useExactMatch)
@@ -83,7 +86,8 @@ BOOL WindowTitleWindowFinder::IsTargetWindow(const HWND windowHandle, LPCWSTR wi
         const BOOL isMatchedExactly = wcscmp(windowTitle, windowTitleToFind) == 0;
         if (!isMatchedExactly)
         {
-            return FALSE;  // The window's title does not match the window title to find.
+            // The window's title does not match the window title to find.
+            return FALSE;
         }
     }
     else
@@ -91,7 +95,8 @@ BOOL WindowTitleWindowFinder::IsTargetWindow(const HWND windowHandle, LPCWSTR wi
         const BOOL hasPartialText = wcsstr(windowTitle, windowTitleToFind) != NULL;
         if (!hasPartialText)
         {
-            return FALSE;  // The window's title does not contain the partial window title text to find.
+            // The window's title does not contain the partial window title text to find.
+            return FALSE;
         }
     }
 
