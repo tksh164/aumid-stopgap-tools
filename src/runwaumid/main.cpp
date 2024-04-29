@@ -183,15 +183,15 @@ BOOL GetExecutionContext(ExecutionContext& context)
 
         // Store the command line arguments to the app execution context.
         context.WindowFindMode = WindowFindMode::ProcessId;
-        if (!FAILED(CopyStringToBuffer(context.AppUserModelID, sizeof(context.AppUserModelID), argv[2], __LINE__))) goto EarlyReturn;
-        if (!FAILED(CopyStringToBuffer(context.TargetToOpen, sizeof(context.TargetToOpen), argv[3], __LINE__))) goto EarlyReturn;
+        if (FAILED(CopyStringToBuffer(context.AppUserModelID, sizeof(context.AppUserModelID), argv[2], __LINE__))) goto EarlyReturn;
+        if (FAILED(CopyStringToBuffer(context.TargetToOpen, sizeof(context.TargetToOpen), argv[3], __LINE__))) goto EarlyReturn;
         if (hasParameterArg)
         {
-            if (!FAILED(CopyStringToBuffer(context.ParametersForTargetToOpen, sizeof(context.ParametersForTargetToOpen), argv[4], __LINE__))) goto EarlyReturn;
+            if (FAILED(CopyStringToBuffer(context.ParametersForTargetToOpen, sizeof(context.ParametersForTargetToOpen), argv[4], __LINE__))) goto EarlyReturn;
         }
         else
         {
-            if (!FAILED(CopyStringToBuffer(context.ParametersForTargetToOpen, sizeof(context.ParametersForTargetToOpen), L"", __LINE__))) goto EarlyReturn;
+            if (FAILED(CopyStringToBuffer(context.ParametersForTargetToOpen, sizeof(context.ParametersForTargetToOpen), L"", __LINE__))) goto EarlyReturn;
         }
 
         returnValue = TRUE;
