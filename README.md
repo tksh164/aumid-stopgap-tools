@@ -45,7 +45,7 @@ The **runwaumid** executes an application then set a specified Application User 
 
 #### Find the target window by the partial window title text
 
-TODO: Write use case
+<!-- TODO: Write use case -->
 
 ```powershell
 runwaumid -tp <AppUserModelID> <WindowTitle> <TargetToOpen> [<ParametersForTargetToOpen>]
@@ -66,7 +66,7 @@ runwaumid -tp <AppUserModelID> <WindowTitle> <TargetToOpen> [<ParametersForTarge
 
 #### Find the target window by the exact window title text
 
-TODO: Write use case
+<!-- TODO: Write use case -->
 
 ```powershell
 runwaumid -te <AppUserModelID> <WindowTitle> <TargetToOpen> [<ParametersForTargetToOpen>]
@@ -87,7 +87,7 @@ runwaumid -te <AppUserModelID> <WindowTitle> <TargetToOpen> [<ParametersForTarge
 
 #### Find the target window by the process ID
 
-TODO: Write use case
+<!-- TODO: Write use case -->
 
 ```powershell
 runwaumid -p <AppUserModelID> <TargetToOpen> [<ParametersForTargetToOpen>]
@@ -105,7 +105,7 @@ runwaumid -p <AppUserModelID> <TargetToOpen> [<ParametersForTargetToOpen>]
 - `TargetToOpen`: The target to open by shell such as executable files (`.exe`), document files, addresses, etc.
 - `ParametersForTargetToOpen` (optional): The parameters for the target to open by shell.
 
-TODO: NOTICE
+<!-- TODO: NOTICE -->
 
 ## Typical use case
 
@@ -116,30 +116,53 @@ Typically, you need just two steps.
 
 ### Obsidian with different vault
 
-1. Create shortcut file (.lnk) for each vault using the **mklnkwaumid**.
+1. Create a shortcut file (.lnk) for each vault using the **mklnkwaumid**. For example, execute the following command in PowerShell.
 
     ```powershell
-    .\mklnkwaumid.exe "D:\temp\Obsidian-Vault001.lnk" Tksh164.Obsidian.Vault1 "C:\bin\runwaumid.exe" "-tp Tksh164.Obsidian.Vault1 ""Obsidian - Vault001"" obsidian://open?vault=Vault001"
+    .\mklnkwaumid.exe 'D:\temp\Obsidian-Vault1.lnk' Tksh164.Obsidian.Vault1 'C:\bin\runwaumid.exe' '-tp Tksh164.Obsidian.Vault1 \"Vault1 - Obsidian\" obsidian://open?vault=Vault1'
     ```
 
-    - The **mklnkwaumid** creates `D:\temp\Obsidian-Vault001.lnk` and sets `Tksh164.Obsidian.Vault1` to the shortcut file as an AppUserModelID.
-    - The `Obsidian-Vault001.lnk` will launches the **runwaumid** with parameters.
-    - The **runwaumid** executes `obsidian://open?vault=Vault001` then find the window that has `Obsidian - Vault001` partially in the windows title text. After found the window, the **runwaumid** sets `Tksh164.Obsidian.Vault1` to the windows as an AppUserModelID.
-    - It is important that specify the same AppUserModelID both the shortcut (mklnkwaumid) and the window (runwaumid).
+    - The **mklnkwaumid** creates `D:\temp\Obsidian-Vault1.lnk` file and sets `Tksh164.Obsidian.Vault1` to the shortcut file as an AppUserModelID. You need to specify AppUserModelID that follow the [form](https://learn.microsoft.com/en-us/windows/win32/shell/appids#how-to-form-an-application-defined-appusermodelid) and unique for each group on the taskbar.
+    - The `D:\temp\Obsidian-Vault1.lnk` will launches the **runwaumid** with parameters.
+    - The **runwaumid** executes `obsidian://open?vault=Vault1` then find the window that has `Vault1 - Obsidian` partially in the windows title text. After found the window, the **runwaumid** sets `Tksh164.Obsidian.Vault1` to the windows as an AppUserModelID.
+    - It is important that specify the same AppUserModelID both the shortcut (created by **mklnkwaumid**) and the window (executed via **runwaumid**).
 
-    Create multiple shortcut files in the same way. For example:
+    You can create multiple shortcut files in the same way. For example:
 
     ```powershell
-    .\mklnkwaumid.exe "D:\temp\Obsidian-Vault002.lnk" Tksh164.Obsidian.Vault2 "C:\bin\runwaumid.exe" "-tp Tksh164.Obsidian.Vault2 ""Obsidian - Vault002"" obsidian://open?vault=Vault002"
+    .\mklnkwaumid.exe 'D:\temp\Obsidian-Vault2.lnk' Tksh164.Obsidian.Vault2 'C:\bin\runwaumid.exe' '-tp Tksh164.Obsidian.Vault2 \"Vault2 - Obsidian\" obsidian://open?vault=Vault2'
     ```
 
-2. Customize the `Obsidian-Vault001.lnk` such as Icon, Comment, etc.
+2. Customize the created shortcut file (e.g. `D:\temp\Obsidian-Vault1.lnk`) as you like. For instance, Icon, Comment, etc.
 
-3. Drag and drop the `Obsidian-Vault001.lnk` to the taskbar.
+3. Drag and drop the shortcut file (e.g. `D:\temp\Obsidian-Vault1.lnk`) on the taskbar.
+
+4. You can delete `D:\temp\Obsidian-Vault1.lnk` file after the drag and drop it on the taskbar.
 
 ### Visual Studio Code with different workspace
 
-TODO: Write VSCode use case
+1. Create a shortcut file (.lnk) for each vault using the **mklnkwaumid**. For example, execute the following command in PowerShell.
+
+    ```powershell
+    .\mklnkwaumid.exe 'D:\temp\VSCode-Workspace1.lnk' Tksh164.VSCode.Workspace1 'C:\bin\runwaumid.exe' '-tp Tksh164.VSCode.Workspace1 \"Workspace1 (Workspace) - Visual Studio Code\" \"C:\Program Files\Microsoft VS Code\Code.exe\" \"D:\VSCode\Workspace1.code-workspace\"'
+    ```
+
+    - The **mklnkwaumid** creates `D:\temp\VSCode-Workspace1.lnk` file and sets `Tksh164.VSCode.Workspace1` to the shortcut file as an AppUserModelID. You need to specify AppUserModelID that follow the [form](https://learn.microsoft.com/en-us/windows/win32/shell/appids#how-to-form-an-application-defined-appusermodelid) and unique for each group on the taskbar.
+    - The `D:\temp\VSCode-Workspace1.lnk` will launches the **runwaumid** with parameters.
+    - The **runwaumid** executes `"C:\Program Files\Microsoft VS Code\Code.exe" "D:\VSCode\Workspace1.code-workspace"` then find the window that has `Workspace1 (Workspace) - Visual Studio Code` partially in the windows title text. After found the window, the **runwaumid** sets `Tksh164.VSCode.Workspace1` to the windows as an AppUserModelID.
+    - It is important that specify the same AppUserModelID both the shortcut (created by **mklnkwaumid**) and the window (executed via **runwaumid**).
+
+    You can create multiple shortcut files in the same way. For example:
+
+    ```powershell
+    .\mklnkwaumid.exe 'D:\temp\VSCode-Workspace2.lnk' Tksh164.VSCode.Workspace2 'C:\bin\runwaumid.exe' '-tp Tksh164.VSCode.Workspace2 \"Workspace2 (Workspace) - Visual Studio Code\" \"C:\Program Files\Microsoft VS Code\Code.exe\" \"D:\VSCode\Workspace2.code-workspace\"'
+    ```
+
+2. Customize the created shortcut file (e.g. `D:\temp\VSCode-Workspace1.lnk`) as you like. For instance, Icon, Comment, etc.
+
+3. Drag and drop the shortcut file (e.g. `D:\temp\VSCode-Workspace1.lnk`) on the taskbar.
+
+4. You can delete `D:\temp\VSCode-Workspace1.lnk` file after the drag and drop it on the taskbar.
 
 ## License
 
