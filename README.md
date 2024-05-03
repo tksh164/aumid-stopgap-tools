@@ -45,7 +45,7 @@ mklnkwaumid <ShortcutFilePath> <AppUserModelID> <Target> [<ParametersForTarget>]
 
 ### runwaumid
 
-The **runwaumid** executes an application then set a specified AppUserModelID to the main windows of the launched application. See [Typical use case](#typical-use-case) for specific usage.
+The **runwaumid** executes an application then set a specified AppUserModelID to the main window of the launched application. See [Typical use case](#typical-use-case) for specific usage.
 
 The **runwaumid** provides three different window finding modes to set AppUserModelID.
 
@@ -79,7 +79,7 @@ runwaumid -te <AppUserModelID> <WindowTitle> <TargetToOpen> [<ParametersForTarge
 
 #### Find the target window by the process ID
 
-This mode is useful for apps that work with single-process. This mode does not depend app's window title text to find the target window.
+This mode is useful for apps that work with single-process. This mode does not depend on the app's window title text to find the target window.
 
 ```powershell
 runwaumid -p <AppUserModelID> <TargetToOpen> [<ParametersForTargetToOpen>]
@@ -92,7 +92,7 @@ runwaumid -p <AppUserModelID> <TargetToOpen> [<ParametersForTargetToOpen>]
 
 ## AppUserModelID form
 
-AppUserModelIDs should has the following form. It can have no more than 128 characters and cannot contain spaces. Each section should be pascal-cased. `CompanyName` and `ProductName` should always be used, while the `SubProduct` and `VersionInformation` portions are optional. See [How to Form an Application-Defined AppUserModelID](https://learn.microsoft.com/en-us/windows/win32/shell/appids#how-to-form-an-application-defined-appusermodelid) to more details.
+AppUserModelIDs should have the following form. It can have no more than 128 characters and cannot contain spaces. Each section should be pascal-cased. `CompanyName` and `ProductName` should always be used, while the `SubProduct` and `VersionInformation` portions are optional. See [How to Form an Application-Defined AppUserModelID](https://learn.microsoft.com/en-us/windows/win32/shell/appids#how-to-form-an-application-defined-appusermodelid) to more details.
 
 ```
 CompanyName.ProductName[.SubProduct[.VersionInformation]]
@@ -105,7 +105,7 @@ Typically, you need just two steps.
 1. Create a shortcut file (.lnk) using the **mklnkwaumid** to execute the target application with parameters via the **runwaumid**.
 2. Drag and drop the shortcut file that was created on the first step to the taskbar.
 
-### Obsidian with different vault
+### Example 1: Obsidian with different vault
 
 1. Create a shortcut file (.lnk) for each vault using the **mklnkwaumid**. For example, execute the following command in PowerShell to create a shortcut file.
 
@@ -113,7 +113,7 @@ Typically, you need just two steps.
     .\mklnkwaumid.exe 'D:\temp\Obsidian-Vault1.lnk' Tksh164.Obsidian.Vault1 'C:\bin\runwaumid.exe' '-tp Tksh164.Obsidian.Vault1 \"Vault1 - Obsidian\" obsidian://open?vault=Vault1'
     ```
 
-    - The **mklnkwaumid** creates `D:\temp\Obsidian-Vault1.lnk` file and sets `Tksh164.Obsidian.Vault1` to the shortcut file as an AppUserModelID. You can specify your own AppUserModelID, but it's should follow the [AppUserModelID form](#appusermodelid-form) and unique for each group on the taskbar.
+    - The **mklnkwaumid** creates `D:\temp\Obsidian-Vault1.lnk` file and sets `Tksh164.Obsidian.Vault1` to the shortcut file as an AppUserModelID. You can specify your own AppUserModelID, but it's should be follow the [AppUserModelID form](#appusermodelid-form). Also, it should be unique for each group on the taskbar.
     - The `D:\temp\Obsidian-Vault1.lnk` will launches the **runwaumid** with parameters.
     - The **runwaumid** executes `obsidian://open?vault=Vault1` then find the window that has `Vault1 - Obsidian` partially in the window's title text. After found the window, the **runwaumid** sets `Tksh164.Obsidian.Vault1` to the window as an AppUserModelID.
     - It is important that specify the same AppUserModelID both the shortcut (created by **mklnkwaumid**) and the window (executed via **runwaumid**) for grouping the pinned icon and windows.
@@ -126,11 +126,9 @@ Typically, you need just two steps.
 
 2. Customize the created shortcut files (e.g. `D:\temp\Obsidian-Vault1.lnk`) as you like. For instance, Icon, Comment, etc.
 
-3. Drag and drop the shortcut files (e.g. `D:\temp\Obsidian-Vault1.lnk`) on the taskbar.
+3. Drag and drop the shortcut files (e.g. `D:\temp\Obsidian-Vault1.lnk`) on the taskbar. You can delete the shortcut files after the drag and drop those on the taskbar.
 
-4. You can delete the shortcut files (e.g. `D:\temp\Obsidian-Vault1.lnk`) after the drag and drop those on the taskbar.
-
-### Visual Studio Code with different workspace
+### Example 2: Visual Studio Code with different workspace
 
 1. Create a shortcut file (.lnk) for each vault using the **mklnkwaumid**. For example, execute the following command in PowerShell to create a shortcut file.
 
@@ -138,7 +136,7 @@ Typically, you need just two steps.
     .\mklnkwaumid.exe 'D:\temp\VSCode-Workspace1.lnk' Tksh164.VSCode.Workspace1 'C:\bin\runwaumid.exe' '-tp Tksh164.VSCode.Workspace1 \"Workspace1 (Workspace) - Visual Studio Code\" \"C:\Program Files\Microsoft VS Code\Code.exe\" \"D:\VSCode\Workspace1.code-workspace\"'
     ```
 
-    - The **mklnkwaumid** creates `D:\temp\VSCode-Workspace1.lnk` file and sets `Tksh164.VSCode.Workspace1` to the shortcut file as an AppUserModelID. You can specify your own AppUserModelID, but it's should follow the [AppUserModelID form](#appusermodelid-form) and unique for each group on the taskbar.
+    - The **mklnkwaumid** creates `D:\temp\VSCode-Workspace1.lnk` file and sets `Tksh164.VSCode.Workspace1` to the shortcut file as an AppUserModelID. You can specify your own AppUserModelID, but it's should be follow the [AppUserModelID form](#appusermodelid-form). Also, it should be unique for each group on the taskbar.
     - The `D:\temp\VSCode-Workspace1.lnk` will launches the **runwaumid** with parameters.
     - The **runwaumid** executes `"C:\Program Files\Microsoft VS Code\Code.exe" "D:\VSCode\Workspace1.code-workspace"` then find the window that has `Workspace1 (Workspace) - Visual Studio Code` partially in the window's title text. After found the window, the **runwaumid** sets `Tksh164.VSCode.Workspace1` to the window as an AppUserModelID.
     - It is important that specify the same AppUserModelID both the shortcut (created by **mklnkwaumid**) and the window (executed via **runwaumid**) for grouping the pinned icon and windows.
@@ -151,9 +149,7 @@ Typically, you need just two steps.
 
 2. Customize the created shortcut file (e.g. `D:\temp\VSCode-Workspace1.lnk`) as you like. For instance, Icon, Comment, etc.
 
-3. Drag and drop the shortcut file (e.g. `D:\temp\VSCode-Workspace1.lnk`) on the taskbar.
-
-4. You can delete the shortcut files (e.g. `D:\temp\VSCode-Workspace1.lnk`) after the drag and drop those on the taskbar.
+3. Drag and drop the shortcut file (e.g. `D:\temp\VSCode-Workspace1.lnk`) on the taskbar. You can delete the shortcut files after the drag and drop those on the taskbar.
 
 ## License
 
