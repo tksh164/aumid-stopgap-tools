@@ -32,7 +32,7 @@ The following demo shows pinned two [Obsidian](https://obsidian.md) icons on the
 
 ### mklnkwaumid
 
-The **mklnkwaumid** creates a shortcut file (`.lnk`) that has a specified AppUserModelID. See [Typical use case](#typical-use-case) for specific usage.
+The **mklnkwaumid** creates a shortcut file (`.lnk`) that has a specified AppUserModelID. See [Typical use cases](#typical-use-cases) for specific usage.
 
 ```powershell
 mklnkwaumid <ShortcutFilePath> <AppUserModelID> <Target> [<ParametersForTarget>]
@@ -45,7 +45,7 @@ mklnkwaumid <ShortcutFilePath> <AppUserModelID> <Target> [<ParametersForTarget>]
 
 ### runwaumid
 
-The **runwaumid** executes an application then set a specified AppUserModelID to the main window of the launched application. See [Typical use case](#typical-use-case) for specific usage.
+The **runwaumid** executes an application then set a specified AppUserModelID to the main window of the launched application. See [Typical use cases](#typical-use-cases) for specific usage.
 
 The **runwaumid** provides three different window finding modes to set AppUserModelID.
 
@@ -153,6 +153,6 @@ Typically, you need just two steps.
 
 ## License
 
-Copyright (c) 2024-present Takeshi Katano. All rights reserved. This software is released under the [MIT License](https://github.com/tksh164/aumid-stopgap-tools/blob/main/LICENSE).
+Copyright (c) 2024 Takeshi Katano. All rights reserved. This software is released under the [MIT License](https://github.com/tksh164/aumid-stopgap-tools/blob/main/LICENSE).
 
 Disclaimer: The codes stored herein are my own personal codes and do not related my employer's any way.
