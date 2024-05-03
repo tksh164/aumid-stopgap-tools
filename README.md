@@ -107,10 +107,16 @@ Typically, you need just two steps.
 
 ### Example 1: Obsidian with different vault
 
-1. Create a shortcut file (.lnk) for each vault using the **mklnkwaumid**. For example, execute the following command in PowerShell to create a shortcut file.
+1. Create a shortcut file (.lnk) for each vault using the **mklnkwaumid**. For example, execute the following command in **Windows PowerShell** to create a shortcut file.
 
     ```powershell
     .\mklnkwaumid.exe 'D:\temp\Obsidian-Vault1.lnk' Tksh164.Obsidian.Vault1 'C:\bin\runwaumid.exe' '-tp Tksh164.Obsidian.Vault1 \"Vault1 - Obsidian\" obsidian://open?vault=Vault1'
+    ```
+
+    If you use **PowerShell (non-Windows PowerShell)**, execute the following command instead. There is difference on escape double quote.
+
+    ```powershell
+    .\mklnkwaumid.exe 'D:\temp\Obsidian-Vault1.lnk' Tksh164.Obsidian.Vault1 'C:\bin\runwaumid.exe' '-tp Tksh164.Obsidian.Vault1 "Vault1 - Obsidian" obsidian://open?vault=Vault1'
     ```
 
     - The **mklnkwaumid** creates `D:\temp\Obsidian-Vault1.lnk` file and sets `Tksh164.Obsidian.Vault1` to the shortcut file as an AppUserModelID. You can specify your own AppUserModelID, but it's should be follow the [AppUserModelID form](#appusermodelid-form). Also, it should be unique for each group on the taskbar.
@@ -124,16 +130,24 @@ Typically, you need just two steps.
     .\mklnkwaumid.exe 'D:\temp\Obsidian-Vault2.lnk' Tksh164.Obsidian.Vault2 'C:\bin\runwaumid.exe' '-tp Tksh164.Obsidian.Vault2 \"Vault2 - Obsidian\" obsidian://open?vault=Vault2'
     ```
 
+
+
 2. Customize the created shortcut files (e.g. `D:\temp\Obsidian-Vault1.lnk`) as you like. For instance, Icon, Comment, etc.
 
 3. Drag and drop the shortcut files (e.g. `D:\temp\Obsidian-Vault1.lnk`) on the taskbar. You can delete the shortcut files after the drag and drop those on the taskbar.
 
 ### Example 2: Visual Studio Code with different workspace
 
-1. Create a shortcut file (.lnk) for each vault using the **mklnkwaumid**. For example, execute the following command in PowerShell to create a shortcut file.
+1. Create a shortcut file (.lnk) for each vault using the **mklnkwaumid**. For example, execute the following command in **Windows PowerShell** to create a shortcut file.
 
     ```powershell
     .\mklnkwaumid.exe 'D:\temp\VSCode-Workspace1.lnk' Tksh164.VSCode.Workspace1 'C:\bin\runwaumid.exe' '-tp Tksh164.VSCode.Workspace1 \"Workspace1 (Workspace) - Visual Studio Code\" \"C:\Program Files\Microsoft VS Code\Code.exe\" \"D:\VSCode\Workspace1.code-workspace\"'
+    ```
+
+    If you use **PowerShell (non-Windows PowerShell)**, execute the following command instead. There is difference on escape double quote.
+
+    ```powershell
+    .\mklnkwaumid.exe 'D:\temp\VSCode-Workspace1.lnk' Tksh164.VSCode.Workspace1 'C:\bin\runwaumid.exe' '-tp Tksh164.VSCode.Workspace1 "Workspace1 (Workspace) - Visual Studio Code" "C:\Program Files\Microsoft VS Code\Code.exe" "D:\VSCode\Workspace1.code-workspace"'
     ```
 
     - The **mklnkwaumid** creates `D:\temp\VSCode-Workspace1.lnk` file and sets `Tksh164.VSCode.Workspace1` to the shortcut file as an AppUserModelID. You can specify your own AppUserModelID, but it's should be follow the [AppUserModelID form](#appusermodelid-form). Also, it should be unique for each group on the taskbar.
