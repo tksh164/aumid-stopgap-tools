@@ -1,8 +1,10 @@
-# AppUserModelID tweak tools
+# AppUserModelID Stopgap Tools
 
-The AppUserModelID tweak tools allow you to pin the same application with different parameters and grouping them on the taskbar.
+The AppUserModelID Stopgap Tools allow you to pin the same application with different parameters and grouping them on the taskbar.
 
 Windows is grouping windows on the taskbar based on [Application User Model IDs (AppUserModelIDs)](https://learn.microsoft.com/en-us/windows/win32/shell/appids). The AppUserModelID tweak tools provides utility commands for tweak that grouping behavior.
+
+![AppUserModelID Stopgap Tools demo animation](https://raw.githubusercontent.com/tksh164/whatnot/main/aumid-stopgap-tools/media/apumid-stopgap-tools-demo.gif)
 
 ## Installation
 
@@ -11,13 +13,13 @@ Windows is grouping windows on the taskbar based on [Application User Model IDs 
 2. Unblock the downloaded zip file by check **Unblock** from the file's property or using [Unblock-File](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/unblock-file) cmdlet.
     
     ```powershell
-    Unblock-File aumid-tweak-tools-x.y.z.zip
+    Unblock-File aumid-stopgap-tools-x.y.z.zip
     ```
     
 3. Extract files from the downloaded zip file. You can extract files by the **Extract All...** context menu in the File Explorer or using [Expand-Archive](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.archive/expand-archive) cmdlet.
 
     ```powershell
-    Expand-Archive aumid-tweak-tools-x.y.z.zip
+    Expand-Archive aumid-stopgap-tools-x.y.z.zip
     ```
 
 4. Put the extracted files anywhere you like.
