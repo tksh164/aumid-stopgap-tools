@@ -8,6 +8,16 @@ The following demo shows pinned two [Obsidian](https://obsidian.md) icons on the
 
 ![AppUserModelID Stopgap Tools demo animation](https://raw.githubusercontent.com/tksh164/whatnot/main/aumid-stopgap-tools/media/apumid-stopgap-tools-demo.gif)
 
+> [!NOTE]
+> Essentially, the window grouping is managed by the app itself (AppUserModelIDs managed by the app itself). The AppUserModelID Stopgap Tools is change it from externally, that is unorthodox way.
+
+## Prerequisites
+
+- The tools were tested on the latest version of Windows 11 with the latest updates.
+    - Also, it may work on the other Windows versions.
+- The tools were tested with [Obsidian](https://obsidian.md) and [Visual Studio Code](https://code.visualstudio.com/).
+    - As a mechanism, it can work with other apps too.
+
 ## Installation
 
 1. Download the [latest release zip file](https://github.com/tksh164/aumid-stopgap-tools/releases/latest).
@@ -129,8 +139,6 @@ Typically, you need just two steps.
     ```powershell
     .\mklnkwaumid.exe 'D:\temp\Obsidian-Vault2.lnk' Tksh164.Obsidian.Vault2 'C:\bin\runwaumid.exe' '-tp Tksh164.Obsidian.Vault2 \"Vault2 - Obsidian\" obsidian://open?vault=Vault2'
     ```
-
-
 
 2. Customize the created shortcut files (e.g. `D:\temp\Obsidian-Vault1.lnk`) as you like. For instance, Icon, Comment, etc.
 
