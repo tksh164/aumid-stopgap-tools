@@ -145,7 +145,11 @@ Typically, you need just two steps.
     .\mklnkwaumid.exe 'D:\temp\Obsidian-Vault2.lnk' Tksh164.Obsidian.Vault2 'C:\bin\runwaumid.exe' '-tp Tksh164.Obsidian.Vault2 \"Vault2 - Obsidian\" obsidian://open?vault=Vault2'
     ```
 
-    **Note:** `obsidian://open?vault=Vault1` and `obsidian://open?vault=Vault2` in the above examples are the URI to open an Obsidian vaults. This is a capability of Obsidian. The URI supports [some formats](https://help.obsidian.md/Extending+Obsidian/Obsidian+URI#Examples). In the above examples, specified the vault name such as `Vault1` and `Vault2` to open a vault. Also, you can specify a vault ID to open an Obsidian vault. If you want to use a vault ID to open your Obsidian vault, execute the **mklnkwaumid** like the following:
+    **Note:** `obsidian://open?vault=Vault1` and `obsidian://open?vault=Vault2` in the above examples are the URI to open Obsidian vaults. This is a capability of Obsidian. The URI supports [some formats](https://help.obsidian.md/Extending+Obsidian/Obsidian+URI#Examples). In the above examples, specified the vault name such as `Vault1` and `Vault2` to open a vault. Also, you can specify a vault ID to open an Obsidian vault. Your Obsidian vault's ID can copy from the vaults management window in Obsidian.
+
+    ![Copy the Obsidian vault's ID from the vaults management window in Obsidian](media/obsidian-vault-id-01.png)
+
+    If you want to use a vault ID to open your Obsidian vault, execute the **mklnkwaumid** like the following:
 
     **With Windows PowerShell:**
 
@@ -158,10 +162,6 @@ Typically, you need just two steps.
     ```powershell
     .\mklnkwaumid.exe 'D:\temp\Obsidian-Vault1.lnk' Tksh164.Obsidian.Vault1 'C:\bin\runwaumid.exe' '-tp Tksh164.Obsidian.Vault1 "Vault1 - Obsidian" obsidian://open?vault=ef6ca3e3b524d22f'
     ```
-
-    Your Obsidian vault's ID can copy from the vaults management window in Obsidian.
-
-    ![Copy the Obsidian vault's ID from the vaults management window in Obsidian](media/obsidian-vault-id-01.png)
 
 2. Customize the created shortcut files (e.g. `D:\temp\Obsidian-Vault1.lnk`) as you like. For instance, Icon, Comment, etc.
 
