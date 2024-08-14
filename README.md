@@ -40,6 +40,11 @@ The following demo shows pinned two [Obsidian](https://obsidian.md) icons on the
 
 ## Using tools
 
+The AppUserModelID Stopgap Tools consist of two tools. You need use both tools together to work as expected.
+
+- **mklnkwaumid** - The tool for creates special shortcut file (`.lnk`). That shortcut file has a specified AppUserModelID.
+- **runwaumid** - The tool for launch an application with a specified AppUserModelID.
+
 ### mklnkwaumid
 
 The **mklnkwaumid** creates a shortcut file (`.lnk`) that has a specified AppUserModelID. See [Typical use cases](#typical-use-cases) for specific usage.
