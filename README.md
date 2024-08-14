@@ -145,7 +145,7 @@ Typically, you need just two steps.
     .\mklnkwaumid.exe 'D:\temp\Obsidian-Vault2.lnk' Tksh164.Obsidian.Vault2 'C:\bin\runwaumid.exe' '-tp Tksh164.Obsidian.Vault2 \"Vault2 - Obsidian\" obsidian://open?vault=Vault2'
     ```
 
-    **Note:** `obsidian://open?vault=Vault1` and `obsidian://open?vault=Vault2` in the above examples are the URI to open an Obsidian vaults. This is a capability of Obsidian. The URI has [some formats](https://help.obsidian.md/Extending+Obsidian/Obsidian+URI#Examples). In the above examples, specified the vault name such as `Vault1` and `Vault2` to open a vault. Also, you can specify a vault ID to open an Obsidian vault. If you want to use a vault ID to open your Obsidian vault, execute the **mklnkwaumid** like the following:
+    **Note:** `obsidian://open?vault=Vault1` and `obsidian://open?vault=Vault2` in the above examples are the URI to open an Obsidian vaults. This is a capability of Obsidian. The URI supports [some formats](https://help.obsidian.md/Extending+Obsidian/Obsidian+URI#Examples). In the above examples, specified the vault name such as `Vault1` and `Vault2` to open a vault. Also, you can specify a vault ID to open an Obsidian vault. If you want to use a vault ID to open your Obsidian vault, execute the **mklnkwaumid** like the following:
 
     **With Windows PowerShell:**
 
