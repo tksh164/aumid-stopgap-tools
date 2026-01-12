@@ -123,6 +123,7 @@ enum WindowFindMode
 constexpr int APP_USER_MODEL_ID_BUFFER_LENGTH = 128 + 1;
 constexpr int PATH_BUFFER_LENGTH = 4096;
 constexpr int WINDOW_TITLE_TEXT_BUFFER_LENGTH = 1024;
+constexpr long DEFAULT_TIMEOUT_MILLISECONDS = 5000;  // 5 seconds
 
 struct ExecutionContext
 {
@@ -146,14 +147,41 @@ BOOL GetExecutionContext(ExecutionContext& context)
     if (wcscmp(L"-tp", argv[1]) == 0)
     {
         context.WindowFindMode = WindowFindMode::PartialTitleText;
+        context.TimeoutMilliseconds = DEFAULT_TIMEOUT_MILLISECONDS;
     }
     else if (wcscmp(L"-te", argv[1]) == 0)
     {
         context.WindowFindMode = WindowFindMode::ExactTitleText;
+        context.TimeoutMilliseconds = DEFAULT_TIMEOUT_MILLISECONDS;
     }
     else if (wcscmp(L"-p", argv[1]) == 0)
     {
         context.WindowFindMode = WindowFindMode::ProcessId;
+        context.TimeoutMilliseconds = DEFAULT_TIMEOUT_MILLISECONDS;
+    }
+    else if (wcsncmp(L"-tp:", argv[1], 4) == 0)
+    {
+        context.WindowFindMode = WindowFindMode::PartialTitleText;
+        if (!ParseTimeoutArg(argv[1], context.TimeoutMilliseconds))
+        {
+            goto EarlyReturn;
+        }
+    }
+    else if (wcsncmp(L"-te:", argv[1], 4) == 0)
+    {
+        context.WindowFindMode = WindowFindMode::ExactTitleText;
+        if (!ParseTimeoutArg(argv[1], context.TimeoutMilliseconds))
+        {
+            goto EarlyReturn;
+        }
+    }
+    else if (wcsncmp(L"-p:", argv[1], 3) == 0)
+    {
+        context.WindowFindMode = WindowFindMode::ProcessId;
+        if (!ParseTimeoutArg(argv[1], context.TimeoutMilliseconds))
+        {
+            goto EarlyReturn;
+        }
     }
     else
     {
@@ -234,6 +262,7 @@ BOOL GetExecutionContext(ExecutionContext& context)
     }
 
     DEBUG_PRINT(L"WindowFindMode: %d\n", (int)context.WindowFindMode);
+    DEBUG_PRINT(L"TimeoutMilliseconds: %d\n", context.TimeoutMilliseconds);
     DEBUG_PRINT(L"AppUserModelID: %s\n", context.AppUserModelID);
     DEBUG_PRINT(L"TargetToOpen: %s\n", context.TargetToOpen);
     DEBUG_PRINT(L"ParametersForTargetToOpen: %s\n", context.ParametersForTargetToOpen);
