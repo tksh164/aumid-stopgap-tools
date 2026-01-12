@@ -31,15 +31,15 @@ void PrintUsage()
         L"\n"
         L"Find the target window by the partial window title text:\n"
         L"\n"
-        L"   runwaumid -tp <AppUserModelID> <WindowTitle> <TargetToOpen> [<ParametersForTargetToOpen>]\n"
+        L"   runwaumid -tp[:<TimeoutInMilliseconds>] <AppUserModelID> <WindowTitle> <TargetToOpen> [<ParametersForTargetToOpen>]\n"
         L"\n"
         L"Find the target window by the exact window title text:\n"
         L"\n"
-        L"   runwaumid -te <AppUserModelID> <WindowTitle> <TargetToOpen> [<ParametersForTargetToOpen>]\n"
+        L"   runwaumid -te[:<TimeoutInMilliseconds>] <AppUserModelID> <WindowTitle> <TargetToOpen> [<ParametersForTargetToOpen>]\n"
         L"\n"
         L"Find the target window by the process ID:\n"
         L"\n"
-        L"   runwaumid -p <AppUserModelID> <TargetToOpen> [<ParametersForTargetToOpen>]";
+        L"   runwaumid -p[:<TimeoutInMilliseconds>] <AppUserModelID> <TargetToOpen> [<ParametersForTargetToOpen>]";
     MessageBox(NULL, usageText, APP_NAME, MB_OK | MB_ICONINFORMATION);
 }
 
