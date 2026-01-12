@@ -8,8 +8,8 @@ The following demo shows pinned two [Obsidian](https://obsidian.md) icons on the
 
 ![AppUserModelID Stopgap Tools demo animation](https://raw.githubusercontent.com/tksh164/whatnot/main/aumid-stopgap-tools/media/apumid-stopgap-tools-demo.gif)
 
-> [!NOTE]
-> Essentially, the window grouping is managed by the app itself (AppUserModelIDs managed by the app itself). The AppUserModelID Stopgap Tools change it from externally, that is unorthodox way.
+> [!CAUTION]
+> Essentially, the window grouping is managed by the app itself (AppUserModelIDs managed by the app itself). The AppUserModelID Stopgap Tools change it from externally, that is no in a normal way.
 
 ## Prerequisites
 
