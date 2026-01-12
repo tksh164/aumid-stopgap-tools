@@ -84,13 +84,13 @@ Typically, you need just two steps.
 
 ### Example 1: Obsidian with different vault
 
-1. Create a shortcut file (.lnk) for each vault using the **mklnkwaumid**. For example, execute the following command in **Windows PowerShell** to create a shortcut file.
+1. Create a shortcut file (.lnk) for each vault using the **mklnkwaumid**. For example, execute the following command in ***Windows* PowerShell** such as Windows PowerShell 5.1 to create a shortcut file.
 
     ```powershell
     .\mklnkwaumid.exe 'D:\temp\Obsidian-Vault1.lnk' Tksh164.Obsidian.Vault1 'C:\bin\runwaumid.exe' '-tp Tksh164.Obsidian.Vault1 \"Vault1 - Obsidian\" obsidian://open?vault=Vault1'
     ```
 
-    If you use **PowerShell (non-Windows PowerShell)**, execute the following command instead. There is difference on escape double quote.
+    If you use **PowerShell** (*non-Windows* PowerShell such as PowerShell 7.x), execute the following command instead. There is difference on escape double quote.
 
     ```powershell
     .\mklnkwaumid.exe 'D:\temp\Obsidian-Vault1.lnk' Tksh164.Obsidian.Vault1 'C:\bin\runwaumid.exe' '-tp Tksh164.Obsidian.Vault1 "Vault1 - Obsidian" obsidian://open?vault=Vault1'
@@ -113,13 +113,13 @@ Typically, you need just two steps.
 
     If you want to use a vault ID to open your Obsidian vault, execute the **mklnkwaumid** like the following:
 
-    **With Windows PowerShell:**
+    **With *Windows* PowerShell such as Windows PowerShell 5.1:**
 
     ```powershell
     .\mklnkwaumid.exe 'D:\temp\Obsidian-Vault1.lnk' Tksh164.Obsidian.Vault1 'C:\bin\runwaumid.exe' '-tp Tksh164.Obsidian.Vault1 \"Vault1 - Obsidian\" obsidian://open?vault=ef6ca3e3b524d22f'
     ```
 
-    **With PowerShell (non-Windows PowerShell):**
+    **With PowerShell (*non-Windows* PowerShell such as PowerShell 7.x):**
 
     ```powershell
     .\mklnkwaumid.exe 'D:\temp\Obsidian-Vault1.lnk' Tksh164.Obsidian.Vault1 'C:\bin\runwaumid.exe' '-tp Tksh164.Obsidian.Vault1 "Vault1 - Obsidian" obsidian://open?vault=ef6ca3e3b524d22f'
@@ -131,13 +131,13 @@ Typically, you need just two steps.
 
 ### Example 2: Visual Studio Code with different workspace
 
-1. Create a shortcut file (.lnk) for each vault using the **mklnkwaumid**. For example, execute the following command in **Windows PowerShell** to create a shortcut file.
+1. Create a shortcut file (.lnk) for each vault using the **mklnkwaumid**. For example, execute the following command in ***Windows* PowerShell** such as Windows PowerShell 5.1 to create a shortcut file.
 
     ```powershell
     .\mklnkwaumid.exe 'D:\temp\VSCode-Workspace1.lnk' Tksh164.VSCode.Workspace1 'C:\bin\runwaumid.exe' '-tp Tksh164.VSCode.Workspace1 \"Workspace1 (Workspace) - Visual Studio Code\" \"C:\Program Files\Microsoft VS Code\Code.exe\" \"D:\VSCode\Workspace1.code-workspace\"'
     ```
 
-    If you use **PowerShell (non-Windows PowerShell)**, execute the following command instead. There is difference on escape double quote.
+    If you use **PowerShell** (*non-Windows* PowerShell such as PowerShell 7.x), execute the following command instead. There is difference on escape double quote.
 
     ```powershell
     .\mklnkwaumid.exe 'D:\temp\VSCode-Workspace1.lnk' Tksh164.VSCode.Workspace1 'C:\bin\runwaumid.exe' '-tp Tksh164.VSCode.Workspace1 "Workspace1 (Workspace) - Visual Studio Code" "C:\Program Files\Microsoft VS Code\Code.exe" "D:\VSCode\Workspace1.code-workspace"'
