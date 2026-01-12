@@ -13,6 +13,7 @@
 #include <windows.h>
 #include <wchar.h>
 #include <strsafe.h>
+#include <locale.h>
 #include <shobjidl.h>
 #include <propkey.h>
 #include <propvarutil.h>
@@ -60,6 +61,34 @@ void ShowErrorMessageBox(LPCWSTR title, const UINT type, LPCWSTR format, ...)
     }
 
     va_end(argList);
+}
+
+BOOL ParseTimeoutArg(LPCWSTR argString, DWORD& timeoutMilliseconds)
+{
+    LPCWSTR colonPtr = wcschr(argString, L':');
+    if (colonPtr == nullptr)
+    {
+        return FALSE;
+    }
+
+    LPCWSTR timeoutString = colonPtr + 1;
+    WCHAR* endPtr = nullptr;
+    _locale_t locale = _wcreate_locale(LC_ALL, L"C");
+    const long timeoutValue = _wcstol_l(timeoutString, &endPtr, 10, locale);
+    _free_locale(locale);
+    if (endPtr == timeoutString || *endPtr != L'\0')
+    {
+        ShowErrorMessageBox(APP_NAME, MB_OK | MB_ICONWARNING, L"The specified timeout value \"%s\" is invalid.", argString);
+        return FALSE;
+    }
+    if (errno == ERANGE || timeoutValue <= 0)
+    {
+        ShowErrorMessageBox(APP_NAME, MB_OK | MB_ICONWARNING, L"The specified timeout value \"%s\" is out of range. It must be in 1 to %d.", argString, LONG_MAX);
+        return FALSE;
+    }
+
+    timeoutMilliseconds = timeoutValue;
+	return TRUE;
 }
 
 HRESULT ValidateArgStringLength(LPCWSTR argString, const size_t maxLength, LPCWSTR argName)
