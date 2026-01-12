@@ -17,7 +17,7 @@ mklnkwaumid <ShortcutFilePath> <AppUserModelID> <Target> [<ParametersForTarget>]
 
 - `ShortcutFilePath`: The file path of the shortcut file to create. The shortcut file has `.lnk` as an extension.
 - `AppUserModelID`: The AppUserModelID to set to the shortcut file. See [AppUserModelID form](#appusermodelid-form) for details.
-- `Target`: The target of the shortcut file. Usually, it's the executable file that you want to launch from the shortcut you created.
+- `Target`: The target of the shortcut file. Usually, it's an executable file that you want to launch from the shortcut you created.
 - `ParametersForTarget` (optional): The parameters for the target.
 
 ### runwaumid
@@ -35,10 +35,10 @@ runwaumid -tp[:<TimeoutInMilliseconds>] <AppUserModelID> <WindowTitle> <TargetTo
 ```
 
 - `-tp`: The window title text partial matching mode. Use the text specified as `WindowTitle` to identify the target window.
-- `TimeoutInMilliseconds` (optional): The timeout in milliseconds to allow find the target window. The runwaumid don't apply the specified AppUserModelID to the target window and exit if couldn't find the target window in this timeout period. The default timeout is 5000.
+- `TimeoutInMilliseconds` (optional): The timeout in milliseconds to allow find the target window. If couldn't find the target window in this timeout period, the runwaumid don't apply the specified AppUserModelID and exit. This option useful if the target application takes long time to launch. The default timeout is 5000.
 - `AppUserModelID`: The AppUserModelID to set to the target window (the found window). The windows that have the same AppUserModelID are grouped on the taskbar. See [AppUserModelID form](#appusermodelid-form) for details.
 - `WindowTitle`: The partial window title text to use to find the target window.
-- `TargetToOpen`: The target to open by shell such as executable files (`.exe`), document files, addresses, etc.
+- `TargetToOpen`: The target to open by shell such as an executable file (`.exe`), a document file, an address, etc.
 - `ParametersForTargetToOpen` (optional): The parameters for the target to open by shell.
 
 #### Find the target window by the exact window title text
@@ -50,10 +50,10 @@ runwaumid -te[:<TimeoutInMilliseconds>] <AppUserModelID> <WindowTitle> <TargetTo
 ```
 
 - `-te`: The window title text exact matching mode. Use the text specified as `WindowTitle` to identify the target window.
-- `TimeoutInMilliseconds` (optional): The timeout in milliseconds to allow find the target window. The runwaumid don't apply the specified AppUserModelID to the target window and exit if couldn't find the target window in this timeout period. The default timeout is 5000.
+- `TimeoutInMilliseconds` (optional): The timeout in milliseconds to allow find the target window. If couldn't find the target window in this timeout period, the runwaumid don't apply the specified AppUserModelID and exit. This option useful if the target application takes long time to launch. The default timeout is 5000.
 - `AppUserModelID`: The AppUserModelID to set to the target window (the found window). The windows that have the same AppUserModelID are grouped on the taskbar. See [AppUserModelID form](#appusermodelid-form) for details.
 - `WindowTitle`: The exact window title text to use to find the target window.
-- `TargetToOpen`: The target to open by shell such as executable files (`.exe`), document files, addresses, etc.
+- `TargetToOpen`: The target to open by shell such as an executable file (`.exe`), a document file, an address, etc.
 - `ParametersForTargetToOpen` (optional): The parameters for the target to open by shell.
 
 #### Find the target window by the process ID
@@ -65,9 +65,9 @@ runwaumid -p[:<TimeoutInMilliseconds>] <AppUserModelID> <TargetToOpen> [<Paramet
 ```
 
 - `-p`: The process ID mode. Use the process ID of the launched process to identify the target window.
-- `TimeoutInMilliseconds` (optional): The timeout in milliseconds to allow find the target window. The runwaumid don't apply the specified AppUserModelID to the target window and exit if couldn't find the target window in this timeout period. The default timeout is 5000.
+- `TimeoutInMilliseconds` (optional): The timeout in milliseconds to allow find the target window. If couldn't find the target window in this timeout period, the runwaumid don't apply the specified AppUserModelID and exit. This option useful if the target application takes long time to launch. The default timeout is 5000.
 - `AppUserModelID`: The AppUserModelID to set to the target window (the found window). The windows that have the same AppUserModelID are grouped on the taskbar. See [AppUserModelID form](#appusermodelid-form) for details.
-- `TargetToOpen`: The target to open by shell such as executable files (`.exe`), document files, addresses, etc.
+- `TargetToOpen`: The target to open by shell such as an executable file (`.exe`), a document file, an address, etc.
 - `ParametersForTargetToOpen` (optional): The parameters for the target to open by shell.
 
 ## AppUserModelID form
