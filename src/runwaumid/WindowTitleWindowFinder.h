@@ -20,11 +20,10 @@ public:
     WindowTitleWindowFinder();
     ~WindowTitleWindowFinder();
 
-    HWND FindWindow(LPCWSTR windowTitleToFind, BOOL useExactMatch, LPCWSTR skipAppUserModelId);
+    HWND FindWindow(LPCWSTR windowTitleToFind, BOOL useExactMatch, LPCWSTR skipAppUserModelId, const DWORD timeoutMilliseconds);
 
 private:
-    DWORD _maxRetryCount;
-    DWORD _retryIntervalMilliseconds;
+    static constexpr DWORD RETRY_INTERVAL_MILLISECONDS = 500;
 
     struct FindWindowData
     {
@@ -34,7 +33,7 @@ private:
         HWND FoundWindowHandle;
     };
 
-    HWND FindWindowWithRetry(LPCWSTR windowTitleToFind, BOOL useExactMatch, LPCWSTR skipAppUserModelId);
+    HWND FindWindowWithRetry(LPCWSTR windowTitleToFind, BOOL useExactMatch, LPCWSTR skipAppUserModelId, const DWORD timeoutMilliseconds);
     HWND FindWindowByTitle(LPCWSTR windowTitleToFind, BOOL useExactMatch, LPCWSTR skipAppUserModelId);
     static BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam);
     static BOOL IsTargetWindow(const HWND windowHandle, LPCWSTR windowTitleToFind, BOOL useExactMatch, LPCWSTR skipAppUserModelId);
