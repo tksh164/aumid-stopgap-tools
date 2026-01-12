@@ -127,6 +127,7 @@ constexpr int WINDOW_TITLE_TEXT_BUFFER_LENGTH = 1024;
 struct ExecutionContext
 {
     WindowFindMode WindowFindMode;
+    DWORD TimeoutMilliseconds;
     WCHAR AppUserModelID[APP_USER_MODEL_ID_BUFFER_LENGTH];
     WCHAR TargetToOpen[PATH_BUFFER_LENGTH];
     WCHAR ParametersForTargetToOpen[PATH_BUFFER_LENGTH];
