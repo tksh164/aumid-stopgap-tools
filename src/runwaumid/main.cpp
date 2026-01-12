@@ -365,18 +365,18 @@ int WINAPI wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
     if (executionContext->WindowFindMode == WindowFindMode::PartialTitleText)
     {
         auto windowFinder = std::make_unique<WindowTitleWindowFinder>();
-        windowHandle = windowFinder->FindWindow(executionContext->WindowTitleText, FALSE, executionContext->AppUserModelID);
+        windowHandle = windowFinder->FindWindow(executionContext->WindowTitleText, FALSE, executionContext->AppUserModelID, executionContext->TimeoutMilliseconds);
     }
     else if (executionContext->WindowFindMode == WindowFindMode::ExactTitleText)
     {
         auto windowFinder = std::make_unique<WindowTitleWindowFinder>();
-        windowHandle = windowFinder->FindWindow(executionContext->WindowTitleText, TRUE, executionContext->AppUserModelID);
+        windowHandle = windowFinder->FindWindow(executionContext->WindowTitleText, TRUE, executionContext->AppUserModelID, executionContext->TimeoutMilliseconds);
     }
     else if (executionContext->WindowFindMode == WindowFindMode::ProcessId)
     {
         processIdToFind = GetProcessId(processHandle);
         auto windowFinder = std::make_unique<ProcessIdWindowFinder>();
-        windowHandle = windowFinder->FindWindow(processIdToFind);
+        windowHandle = windowFinder->FindWindow(processIdToFind, executionContext->TimeoutMilliseconds);
     }
     else
     {
@@ -397,26 +397,26 @@ int WINAPI wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
         if (executionContext->WindowFindMode == WindowFindMode::PartialTitleText)
         {
             constexpr LPCWSTR messageText =
-                L"Couldn't find the target window that contained \"%s\".\n"
+                L"Couldn't find the target window that contained \"%s\" in %d milliseconds.\n"
                 L"\n"
                 L"%s %s\n";
-            ShowErrorMessageBox(APP_NAME, MB_OK | MB_ICONWARNING, messageText, executionContext->WindowTitleText, executionContext->TargetToOpen, executionContext->ParametersForTargetToOpen);
+            ShowErrorMessageBox(APP_NAME, MB_OK | MB_ICONWARNING, messageText, executionContext->WindowTitleText, executionContext->TimeoutMilliseconds, executionContext->TargetToOpen, executionContext->ParametersForTargetToOpen);
         }
         else if (executionContext->WindowFindMode == WindowFindMode::ExactTitleText)
         {
             constexpr LPCWSTR messageText =
-                L"Couldn't find the target window that has \"%s\".\n"
+                L"Couldn't find the target window that has \"%s\" in %d milliseconds.\n"
                 L"\n"
                 L"%s %s\n";
-            ShowErrorMessageBox(APP_NAME, MB_OK | MB_ICONWARNING, messageText, executionContext->WindowTitleText, executionContext->TargetToOpen, executionContext->ParametersForTargetToOpen);
+            ShowErrorMessageBox(APP_NAME, MB_OK | MB_ICONWARNING, messageText, executionContext->WindowTitleText, executionContext->TimeoutMilliseconds, executionContext->TargetToOpen, executionContext->ParametersForTargetToOpen);
         }
         else if (executionContext->WindowFindMode == WindowFindMode::ProcessId)
         {
             constexpr LPCWSTR messageText =
-                L"Couldn't find the process that process ID is %d.\n"
+                L"Couldn't find the process that has %d as a process ID in %d milliseconds.\n"
                 L"\n"
                 L"%s %s";
-            ShowErrorMessageBox(APP_NAME, MB_OK | MB_ICONWARNING, messageText, processIdToFind, executionContext->TargetToOpen, executionContext->ParametersForTargetToOpen);
+            ShowErrorMessageBox(APP_NAME, MB_OK | MB_ICONWARNING, messageText, processIdToFind, executionContext->TimeoutMilliseconds, executionContext->TargetToOpen, executionContext->ParametersForTargetToOpen);
         }
     }
 
