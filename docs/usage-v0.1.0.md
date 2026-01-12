@@ -17,7 +17,7 @@ mklnkwaumid <ShortcutFilePath> <AppUserModelID> <Target> [<ParametersForTarget>]
 
 - `ShortcutFilePath`: The file path of the shortcut file to create. The shortcut file has `.lnk` as an extension.
 - `AppUserModelID`: The AppUserModelID to set to the shortcut file. See [AppUserModelID form](#appusermodelid-form) for details.
-- `Target`: The target of the shortcut file.
+- `Target`: The target of the shortcut file. Usually, it's the executable file that you want to launch from the shortcut you created.
 - `ParametersForTarget` (optional): The parameters for the target.
 
 ### runwaumid
