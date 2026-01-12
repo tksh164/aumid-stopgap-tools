@@ -40,6 +40,7 @@ The following demo shows pinned two [Obsidian](https://obsidian.md) icons on the
 
 ## Usage
 
+- [Usage for v0.2.0](./docs/usage-v0.2.0.md)
 - [Usage for v0.1.0](./docs/usage-v0.1.0.md)
 
 ## License
