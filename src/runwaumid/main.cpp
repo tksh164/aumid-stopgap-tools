@@ -13,6 +13,7 @@
 #include <windows.h>
 #include <wchar.h>
 #include <strsafe.h>
+#include <locale.h>
 #include <shobjidl.h>
 #include <propkey.h>
 #include <propvarutil.h>
@@ -30,15 +31,15 @@ void PrintUsage()
         L"\n"
         L"Find the target window by the partial window title text:\n"
         L"\n"
-        L"   runwaumid -tp <AppUserModelID> <WindowTitle> <TargetToOpen> [<ParametersForTargetToOpen>]\n"
+        L"   runwaumid -tp[:<TimeoutInMilliseconds>] <AppUserModelID> <WindowTitle> <TargetToOpen> [<ParametersForTargetToOpen>]\n"
         L"\n"
         L"Find the target window by the exact window title text:\n"
         L"\n"
-        L"   runwaumid -te <AppUserModelID> <WindowTitle> <TargetToOpen> [<ParametersForTargetToOpen>]\n"
+        L"   runwaumid -te[:<TimeoutInMilliseconds>] <AppUserModelID> <WindowTitle> <TargetToOpen> [<ParametersForTargetToOpen>]\n"
         L"\n"
         L"Find the target window by the process ID:\n"
         L"\n"
-        L"   runwaumid -p <AppUserModelID> <TargetToOpen> [<ParametersForTargetToOpen>]";
+        L"   runwaumid -p[:<TimeoutInMilliseconds>] <AppUserModelID> <TargetToOpen> [<ParametersForTargetToOpen>]";
     MessageBox(NULL, usageText, APP_NAME, MB_OK | MB_ICONINFORMATION);
 }
 
@@ -60,6 +61,34 @@ void ShowErrorMessageBox(LPCWSTR title, const UINT type, LPCWSTR format, ...)
     }
 
     va_end(argList);
+}
+
+BOOL ParseTimeoutArg(LPCWSTR argString, DWORD& timeoutMilliseconds)
+{
+    LPCWSTR colonPtr = wcschr(argString, L':');
+    if (colonPtr == nullptr)
+    {
+        return FALSE;
+    }
+
+    LPCWSTR timeoutString = colonPtr + 1;
+    WCHAR* endPtr = nullptr;
+    _locale_t locale = _wcreate_locale(LC_ALL, L"C");
+    const long timeoutValue = _wcstol_l(timeoutString, &endPtr, 10, locale);
+    _free_locale(locale);
+    if (endPtr == timeoutString || *endPtr != L'\0')
+    {
+        ShowErrorMessageBox(APP_NAME, MB_OK | MB_ICONWARNING, L"The specified timeout value \"%s\" is invalid.", argString);
+        return FALSE;
+    }
+    if (errno == ERANGE || timeoutValue <= 0)
+    {
+        ShowErrorMessageBox(APP_NAME, MB_OK | MB_ICONWARNING, L"The specified timeout value \"%s\" is out of range. It must be in 1 to %d.", argString, LONG_MAX);
+        return FALSE;
+    }
+
+    timeoutMilliseconds = timeoutValue;
+	return TRUE;
 }
 
 HRESULT ValidateArgStringLength(LPCWSTR argString, const size_t maxLength, LPCWSTR argName)
@@ -94,10 +123,12 @@ enum WindowFindMode
 constexpr int APP_USER_MODEL_ID_BUFFER_LENGTH = 128 + 1;
 constexpr int PATH_BUFFER_LENGTH = 4096;
 constexpr int WINDOW_TITLE_TEXT_BUFFER_LENGTH = 1024;
+constexpr long DEFAULT_TIMEOUT_MILLISECONDS = 5000;  // 5 seconds
 
 struct ExecutionContext
 {
     WindowFindMode WindowFindMode;
+    DWORD TimeoutMilliseconds;
     WCHAR AppUserModelID[APP_USER_MODEL_ID_BUFFER_LENGTH];
     WCHAR TargetToOpen[PATH_BUFFER_LENGTH];
     WCHAR ParametersForTargetToOpen[PATH_BUFFER_LENGTH];
@@ -116,14 +147,41 @@ BOOL GetExecutionContext(ExecutionContext& context)
     if (wcscmp(L"-tp", argv[1]) == 0)
     {
         context.WindowFindMode = WindowFindMode::PartialTitleText;
+        context.TimeoutMilliseconds = DEFAULT_TIMEOUT_MILLISECONDS;
     }
     else if (wcscmp(L"-te", argv[1]) == 0)
     {
         context.WindowFindMode = WindowFindMode::ExactTitleText;
+        context.TimeoutMilliseconds = DEFAULT_TIMEOUT_MILLISECONDS;
     }
     else if (wcscmp(L"-p", argv[1]) == 0)
     {
         context.WindowFindMode = WindowFindMode::ProcessId;
+        context.TimeoutMilliseconds = DEFAULT_TIMEOUT_MILLISECONDS;
+    }
+    else if (wcsncmp(L"-tp:", argv[1], 4) == 0)
+    {
+        context.WindowFindMode = WindowFindMode::PartialTitleText;
+        if (!ParseTimeoutArg(argv[1], context.TimeoutMilliseconds))
+        {
+            goto EarlyReturn;
+        }
+    }
+    else if (wcsncmp(L"-te:", argv[1], 4) == 0)
+    {
+        context.WindowFindMode = WindowFindMode::ExactTitleText;
+        if (!ParseTimeoutArg(argv[1], context.TimeoutMilliseconds))
+        {
+            goto EarlyReturn;
+        }
+    }
+    else if (wcsncmp(L"-p:", argv[1], 3) == 0)
+    {
+        context.WindowFindMode = WindowFindMode::ProcessId;
+        if (!ParseTimeoutArg(argv[1], context.TimeoutMilliseconds))
+        {
+            goto EarlyReturn;
+        }
     }
     else
     {
@@ -204,6 +262,7 @@ BOOL GetExecutionContext(ExecutionContext& context)
     }
 
     DEBUG_PRINT(L"WindowFindMode: %d\n", (int)context.WindowFindMode);
+    DEBUG_PRINT(L"TimeoutMilliseconds: %d\n", context.TimeoutMilliseconds);
     DEBUG_PRINT(L"AppUserModelID: %s\n", context.AppUserModelID);
     DEBUG_PRINT(L"TargetToOpen: %s\n", context.TargetToOpen);
     DEBUG_PRINT(L"ParametersForTargetToOpen: %s\n", context.ParametersForTargetToOpen);
@@ -306,18 +365,18 @@ int WINAPI wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
     if (executionContext->WindowFindMode == WindowFindMode::PartialTitleText)
     {
         auto windowFinder = std::make_unique<WindowTitleWindowFinder>();
-        windowHandle = windowFinder->FindWindow(executionContext->WindowTitleText, FALSE, executionContext->AppUserModelID);
+        windowHandle = windowFinder->FindWindow(executionContext->WindowTitleText, FALSE, executionContext->AppUserModelID, executionContext->TimeoutMilliseconds);
     }
     else if (executionContext->WindowFindMode == WindowFindMode::ExactTitleText)
     {
         auto windowFinder = std::make_unique<WindowTitleWindowFinder>();
-        windowHandle = windowFinder->FindWindow(executionContext->WindowTitleText, TRUE, executionContext->AppUserModelID);
+        windowHandle = windowFinder->FindWindow(executionContext->WindowTitleText, TRUE, executionContext->AppUserModelID, executionContext->TimeoutMilliseconds);
     }
     else if (executionContext->WindowFindMode == WindowFindMode::ProcessId)
     {
         processIdToFind = GetProcessId(processHandle);
         auto windowFinder = std::make_unique<ProcessIdWindowFinder>();
-        windowHandle = windowFinder->FindWindow(processIdToFind);
+        windowHandle = windowFinder->FindWindow(processIdToFind, executionContext->TimeoutMilliseconds);
     }
     else
     {
@@ -338,26 +397,26 @@ int WINAPI wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
         if (executionContext->WindowFindMode == WindowFindMode::PartialTitleText)
         {
             constexpr LPCWSTR messageText =
-                L"Couldn't find the target window that contained \"%s\".\n"
+                L"Couldn't find the target window that contained \"%s\" in %d milliseconds.\n"
                 L"\n"
                 L"%s %s\n";
-            ShowErrorMessageBox(APP_NAME, MB_OK | MB_ICONWARNING, messageText, executionContext->WindowTitleText, executionContext->TargetToOpen, executionContext->ParametersForTargetToOpen);
+            ShowErrorMessageBox(APP_NAME, MB_OK | MB_ICONWARNING, messageText, executionContext->WindowTitleText, executionContext->TimeoutMilliseconds, executionContext->TargetToOpen, executionContext->ParametersForTargetToOpen);
         }
         else if (executionContext->WindowFindMode == WindowFindMode::ExactTitleText)
         {
             constexpr LPCWSTR messageText =
-                L"Couldn't find the target window that has \"%s\".\n"
+                L"Couldn't find the target window that has \"%s\" in %d milliseconds.\n"
                 L"\n"
                 L"%s %s\n";
-            ShowErrorMessageBox(APP_NAME, MB_OK | MB_ICONWARNING, messageText, executionContext->WindowTitleText, executionContext->TargetToOpen, executionContext->ParametersForTargetToOpen);
+            ShowErrorMessageBox(APP_NAME, MB_OK | MB_ICONWARNING, messageText, executionContext->WindowTitleText, executionContext->TimeoutMilliseconds, executionContext->TargetToOpen, executionContext->ParametersForTargetToOpen);
         }
         else if (executionContext->WindowFindMode == WindowFindMode::ProcessId)
         {
             constexpr LPCWSTR messageText =
-                L"Couldn't find the process that process ID is %d.\n"
+                L"Couldn't find the process that has %d as a process ID in %d milliseconds.\n"
                 L"\n"
                 L"%s %s";
-            ShowErrorMessageBox(APP_NAME, MB_OK | MB_ICONWARNING, messageText, processIdToFind, executionContext->TargetToOpen, executionContext->ParametersForTargetToOpen);
+            ShowErrorMessageBox(APP_NAME, MB_OK | MB_ICONWARNING, messageText, processIdToFind, executionContext->TimeoutMilliseconds, executionContext->TargetToOpen, executionContext->ParametersForTargetToOpen);
         }
     }
 

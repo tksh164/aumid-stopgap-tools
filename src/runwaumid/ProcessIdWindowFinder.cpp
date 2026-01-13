@@ -3,23 +3,23 @@
 
 ProcessIdWindowFinder::ProcessIdWindowFinder()
 {
-    _maxRetryCount = 10;
-    _retryIntervalMilliseconds = 500;
 }
 
 ProcessIdWindowFinder::~ProcessIdWindowFinder()
 {
 }
 
-HWND ProcessIdWindowFinder::FindWindow(const DWORD processIdToFind)
+HWND ProcessIdWindowFinder::FindWindow(const DWORD processIdToFind, const DWORD timeoutMilliseconds)
 {
-    return FindWindowWithRetry(processIdToFind);
+    return FindWindowWithRetry(processIdToFind, timeoutMilliseconds);
 }
 
-HWND ProcessIdWindowFinder::FindWindowWithRetry(const DWORD processIdToFind)
+HWND ProcessIdWindowFinder::FindWindowWithRetry(const DWORD processIdToFind, const DWORD timeoutMilliseconds)
 {
     HWND foundWindowHandle = NULL;
-    for (DWORD retryCount = 0; retryCount < _maxRetryCount; retryCount++)
+    const DWORD startTickCount = GetTickCount();
+	const DWORD timeoutTickCount = startTickCount + timeoutMilliseconds;
+    while (GetTickCount() < timeoutTickCount)
     {
         HWND windowHandle = FindWindowByProcessId(processIdToFind);
         if (windowHandle != NULL)
@@ -28,7 +28,7 @@ HWND ProcessIdWindowFinder::FindWindowWithRetry(const DWORD processIdToFind)
             break;
         }
         DEBUG_PRINT(L"Couldn't find the target window.\n");
-        Sleep(_retryIntervalMilliseconds);
+        Sleep(RETRY_INTERVAL_MILLISECONDS);
     }
     return foundWindowHandle;
 }

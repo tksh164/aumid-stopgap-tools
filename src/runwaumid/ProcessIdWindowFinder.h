@@ -18,11 +18,10 @@ public:
     ProcessIdWindowFinder();
     ~ProcessIdWindowFinder();
 
-    HWND FindWindow(const DWORD processIdToFindFor);
+    HWND FindWindow(const DWORD processIdToFindFor, const DWORD timeoutMilliseconds);
 
 private:
-    DWORD _maxRetryCount;
-    DWORD _retryIntervalMilliseconds;
+    static constexpr DWORD RETRY_INTERVAL_MILLISECONDS = 300;
 
     struct FindWindowData
     {
@@ -30,7 +29,7 @@ private:
         HWND FoundWindowHandle;
     };
 
-    HWND FindWindowWithRetry(const DWORD processIdToFindFor);
+    HWND FindWindowWithRetry(const DWORD processIdToFindFor, const DWORD timeoutMilliseconds);
     HWND FindWindowByProcessId(const DWORD processIdToFindFor);
     static BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam);
     static BOOL IsTargetWindow(const HWND windowHandle, const DWORD processIdToFindFor);

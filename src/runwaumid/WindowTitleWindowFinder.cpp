@@ -3,23 +3,23 @@
 
 WindowTitleWindowFinder::WindowTitleWindowFinder()
 {
-    _maxRetryCount = 10;
-    _retryIntervalMilliseconds = 500;
 }
 
 WindowTitleWindowFinder::~WindowTitleWindowFinder()
 {
 }
 
-HWND WindowTitleWindowFinder::FindWindow(LPCWSTR windowTitleToFind, const BOOL useExactMatch, LPCWSTR skipAppUserModelId)
+HWND WindowTitleWindowFinder::FindWindow(LPCWSTR windowTitleToFind, const BOOL useExactMatch, LPCWSTR skipAppUserModelId, const DWORD timeoutMilliseconds)
 {
-    return FindWindowWithRetry(windowTitleToFind, useExactMatch, skipAppUserModelId);
+    return FindWindowWithRetry(windowTitleToFind, useExactMatch, skipAppUserModelId, timeoutMilliseconds);
 }
 
-HWND WindowTitleWindowFinder::FindWindowWithRetry(LPCWSTR windowTitleToFind, const BOOL useExactMatch, LPCWSTR skipAppUserModelId)
+HWND WindowTitleWindowFinder::FindWindowWithRetry(LPCWSTR windowTitleToFind, const BOOL useExactMatch, LPCWSTR skipAppUserModelId, const DWORD timeoutMilliseconds)
 {
     HWND foundWindowHandle = NULL;
-    for (DWORD retryCount = 0; retryCount < _maxRetryCount; retryCount++)
+    const DWORD startTickCount = GetTickCount();
+    const DWORD timeoutTickCount = startTickCount + timeoutMilliseconds;
+    while (GetTickCount() < timeoutTickCount)
     {
         HWND windowHandle = FindWindowByTitle(windowTitleToFind, useExactMatch, skipAppUserModelId);
         if (windowHandle != NULL)
@@ -28,7 +28,7 @@ HWND WindowTitleWindowFinder::FindWindowWithRetry(LPCWSTR windowTitleToFind, con
             break;
         }
         DEBUG_PRINT(L"Couldn't find the target window.\n");
-        Sleep(_retryIntervalMilliseconds);
+        Sleep(RETRY_INTERVAL_MILLISECONDS);
     }
     return foundWindowHandle;
 }
