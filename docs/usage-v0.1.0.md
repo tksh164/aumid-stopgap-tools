@@ -82,7 +82,7 @@ Typically, you need just two steps.
 1. Create a shortcut file (.lnk) using the **mklnkwaumid** to execute the target application with parameters via the **runwaumid**.
 2. Drag and drop the shortcut file that was created on the first step to the taskbar.
 
-### Example 1: Obsidian with different vault
+### Example 1: Obsidian with a different vault
 
 1. Create a shortcut file (.lnk) for each vault using the **mklnkwaumid**. For example, execute the following command in ***Windows* PowerShell** such as Windows PowerShell 5.1 to create a shortcut file.
 
@@ -129,9 +129,9 @@ Typically, you need just two steps.
 
 3. Drag and drop the shortcut files (e.g. `D:\temp\Obsidian-Vault1.lnk`) on the taskbar. You can delete the shortcut files after the drag and drop those on the taskbar.
 
-### Example 2: Visual Studio Code with different workspace
+### Example 2: Visual Studio Code with a different workspace
 
-1. Create a shortcut file (.lnk) for each vault using the **mklnkwaumid**. For example, execute the following command in ***Windows* PowerShell** such as Windows PowerShell 5.1 to create a shortcut file.
+1. Create a shortcut file (.lnk) for each workspace using the **mklnkwaumid**. For example, execute the following command in ***Windows* PowerShell** such as Windows PowerShell 5.1 to create a shortcut file.
 
     ```powershell
     .\mklnkwaumid.exe 'D:\temp\VSCode-Workspace1.lnk' Tksh164.VSCode.Workspace1 'C:\bin\runwaumid.exe' '-tp Tksh164.VSCode.Workspace1 \"Workspace1 (Workspace) - Visual Studio Code\" \"C:\Program Files\Microsoft VS Code\Code.exe\" \"D:\VSCode\Workspace1.code-workspace\"'
