@@ -85,7 +85,7 @@ Typically, you need just two steps.
 1. Create a shortcut file (.lnk) using the **mklnkwaumid** to execute the target application with parameters via the **runwaumid**.
 2. Drag and drop the shortcut file that was created on the first step to the taskbar.
 
-### Example 1: Obsidian with different vault
+### Example 1: Obsidian with a different vault
 
 1. Create a shortcut file (.lnk) for each vault using the **mklnkwaumid**. For example, execute the following command in ***Windows* PowerShell** such as Windows PowerShell 5.1 to create a shortcut file.
 
@@ -132,9 +132,9 @@ Typically, you need just two steps.
 
 3. Drag and drop the shortcut files (e.g. `D:\temp\Obsidian-Vault1.lnk`) on the taskbar. You can delete the shortcut files after the drag and drop those on the taskbar.
 
-### Example 2: Visual Studio Code with different workspace
+### Example 2: Visual Studio Code with a different workspace
 
-1. Create a shortcut file (.lnk) for each vault using the **mklnkwaumid**. For example, execute the following command in ***Windows* PowerShell** such as Windows PowerShell 5.1 to create a shortcut file.
+1. Create a shortcut file (.lnk) for each workspace using the **mklnkwaumid**. For example, execute the following command in ***Windows* PowerShell** such as Windows PowerShell 5.1 to create a shortcut file.
 
     ```powershell
     .\mklnkwaumid.exe 'D:\temp\VSCode-Workspace1.lnk' Tksh164.VSCode.Workspace1 'C:\bin\runwaumid.exe' '-tp Tksh164.VSCode.Workspace1 \"Workspace1 (Workspace) - Visual Studio Code\" \"C:\Program Files\Microsoft VS Code\Code.exe\" \"D:\VSCode\Workspace1.code-workspace\"'
@@ -160,3 +160,30 @@ Typically, you need just two steps.
 2. Customize the created shortcut file (e.g. `D:\temp\VSCode-Workspace1.lnk`) as you like. For instance, Icon, Comment, etc.
 
 3. Drag and drop the shortcut file (e.g. `D:\temp\VSCode-Workspace1.lnk`) on the taskbar. You can delete the shortcut files after the drag and drop those on the taskbar.
+
+### Example 3: Eclipse IDE with a different workspace
+
+The Eclipse IDE takes long time to launch most cases. In this case, specify `TimeoutInMilliseconds` to get an expected result.
+
+1. Create a shortcut file (.lnk) for each workspace using the **mklnkwaumid**. For example, execute the following command in ***Windows* PowerShell** such as Windows PowerShell 5.1 to create a shortcut file.
+
+    ```powershell
+    .\mklnkwaumid.exe 'C:\temp\Eclipse-Workspace1.lnk' YourOwn.AppUserModelID.Workspace1 'C:\bin\runwaumid.exe' '-tp:30000 YourOwn.AppUserModelID.Workspace1 \"Workspace1 - Eclipse IDE\" \"C:\Users\User1\eclipse\java-2025-12\eclipse\eclipse.exe\" \"-data \"\"C:\Users\User1\Workspace1\"\"\"'
+    ```
+
+    If you use **PowerShell** (*non-Windows* PowerShell such as PowerShell 7.x), execute the following command instead. There is difference on escape double quote.
+
+    ```powershell
+    .\mklnkwaumid.exe 'C:\temp\Eclipse-Workspace1.lnk' YourOwn.AppUserModelID.Workspace1 'C:\bin\runwaumid.exe' '-tp:30000 YourOwn.AppUserModelID.Workspace1 "Workspace1 - Eclipse IDE" "C:\Users\User1\eclipse\java-2025-12\eclipse\eclipse.exe" "-data ""C:\Users\User1\Workspace1"""'
+    ```
+
+    - The **mklnkwaumid** creates `C:\temp\Eclipse-Workspace1.lnk` file and sets `YourOwn.AppUserModelID.Workspace1` to the shortcut file as an AppUserModelID. You can specify your own AppUserModelID, but it's should be follow the [AppUserModelID form](#appusermodelid-form). Also, it should be unique for each group on the taskbar.
+    - The `C:\temp\Eclipse-Workspace1.lnk` will launches the **runwaumid** with parameters.
+    - The **runwaumid** executes `"C:\Users\User1\eclipse\java-2025-12\eclipse\eclipse.exe" -data "C:\Users\User1\Workspace1"` then find the window that has `Workspace1 - Eclipse IDE` partially in the window's title text with a timeout of `30000` milliseconds. After found the window, the **runwaumid** sets `YourOwn.AppUserModelID.Workspace1` to the window as an AppUserModelID.
+    - It is important that specify the same AppUserModelID both the shortcut (created by **mklnkwaumid**) and the window (executed via **runwaumid**) for grouping the pinned icon and windows.
+
+    You can create multiple shortcut files in the same way.
+
+2. Customize the created shortcut file (e.g. `C:\temp\Eclipse-Workspace1.lnk`) as you like. For instance, Icon, Comment, etc.
+
+3. Drag and drop the shortcut file (e.g. `C:\temp\Eclipse-Workspace1.lnk`) on the taskbar. You can delete the shortcut files after the drag and drop those on the taskbar.
