@@ -21,7 +21,7 @@ public:
     HWND FindWindow(const DWORD processIdToFindFor, const DWORD timeoutMilliseconds);
 
 private:
-    static constexpr DWORD RETRY_INTERVAL_MILLISECONDS = 500;
+    static constexpr DWORD RETRY_INTERVAL_MILLISECONDS = 300;
 
     struct FindWindowData
     {
